@@ -1,7 +1,7 @@
 import tkinter as tk
 
-from controle_contas import mostrar_menu
+from controle_contas import abrir_janela_principal
 
 menu = tk.Tk()
 
-mostrar_menu(menu)
+abrir_janela_principal(menu)

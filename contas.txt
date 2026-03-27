@@ -1,0 +1,5 @@
+1;cartao_fat_04;99.97;2026-03-06;Remédios Bebeu/Kizzi
+2;cartao_fat_04;99.97;2026-03-09;Remédios Bebeu/Pablo
+3;obra;422.5;2026-03-13;Aluguel Escoras
+4;saint_martin;120;2026-03-21;saldo
+5;obra;123.5;2026-03-27;Alug Andaimes Izabel
