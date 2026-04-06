@@ -244,7 +244,7 @@ def abrir_janela_extrato(janela_anterior):
         pady=PAD_Y, )
 
     janela_extrato.focus_set()
-    janela_extrato.grab_set()
+    # janela_extrato.grab_set()
     janela_extrato.wait_window()
 
 
@@ -501,7 +501,7 @@ def abrir_janela_movimentar_conta():
                  pady=PAD_Y, )
 
     janela_fazer_movimentação.focus_set()
-    janela_fazer_movimentação.grab_set()
+    # janela_fazer_movimentação.grab_set()
     janela_fazer_movimentação.wait_window()
 
 
@@ -585,7 +585,7 @@ def abrir_janela_pesquisar_extrato():
                  pady=PAD_Y)
 
     janela_ver_extrato.focus_set()
-    janela_ver_extrato.grab_set()
+    # janela_ver_extrato.grab_set()
     janela_ver_extrato.wait_window()
 
 def abrir_janela_ver_saldos():
@@ -618,5 +618,5 @@ def abrir_janela_ver_saldos():
     bt_sair.pack(expand=tk.YES, fill=tk.BOTH, side=tk.BOTTOM, padx=PAD_X,
                     pady=PAD_Y, )
     janela_ver_contas.focus_set()
-    janela_ver_contas.grab_set()
+    # janela_ver_contas.grab_set()
     janela_ver_contas.wait_window()
