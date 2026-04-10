@@ -51,7 +51,8 @@ class JanelaMovimentarConta(tk.Toplevel):
         contas = []
         for conta in lista_contas:
             contas.append(conta)
-        self.entry_nm_conta = ttk.Combobox(frame_1, values=contas, font=FONTE_ARIAL_12, width=LARGURA_LABEL)
+
+        self.entry_nm_conta = ttk.Combobox(frame_1, values=contas, font=FONTE_ARIAL_12, width=LARGURA_DATE_ENTRY)
         self.entry_nm_conta.pack(expand=tk.YES, fill=tk.BOTH, side=tk.RIGHT, padx=PAD_X,
                             pady=PAD_Y)
 
@@ -87,10 +88,7 @@ class JanelaMovimentarConta(tk.Toplevel):
                                            padx=PAD_X,
                                            pady=PAD_Y)
 
-        self.entry_data = DateEntry(frame_3,
-                                    font=FONTE_ARIAL_12,
-                                    date_pattern='dd/mm/yyyy',
-                                    width=LARGURA_DATE_ENTRY)
+        self.entry_data = DateEntry(frame_3, font=FONTE_ARIAL_12, date_pattern='dd/mm/yyyy', width=LARGURA_DATE_ENTRY)
         self.entry_data.pack(expand=tk.YES, fill=tk.BOTH, side=tk.RIGHT,
                              padx=PAD_X,
                              pady=PAD_Y)
