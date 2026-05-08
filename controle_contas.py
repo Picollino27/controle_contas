@@ -177,7 +177,35 @@ class JanelaMovimentarConta(tk.Toplevel):
                                    "movimentação efetuada",
                                    parent=self)
         self.destroy()
+    def conferir_valores_editar(self,janela_extrato,num_serie):
+        try:
+            Decimal(self.entry_valor.get())
+        except decimal.InvalidOperation:
+            tk.messagebox.showinfo("Erro", "Valor Inválido")
+            return
+        try:
+            datetime.strftime(self.entry_data.get_date(), "%Y/%m/%d")
+
+        except ValueError:
+            tk.messagebox.showinfo("Erro", "Data Inválida")
+            return
+
+        fazer_movimentação(self.entry_nm_conta.get(),
+                           self.entry_valor.get(),
+                           self.entry_data.get_date(),
+                           self.entry_comentario.get())
+        apagar_movimentação(num_serie)
+        self.atualizar_extrato(janela_extrato,num_serie)
+
     def atualizar_extrato(self,janela_extrato,num_serie):
+        try:
+            Decimal(self.entry_valor.get())
+            Decimal(self.valor_anterior)
+        except decimal.InvalidOperation:
+                tk.messagebox.showinfo("erro",
+                                       "valor inválido",
+                                       parent=self)
+                return
         saldo_atualizado = janela_extrato.saldo_final + \
                            Decimal(self.entry_valor.get()) - \
                            self.valor_anterior
@@ -187,7 +215,7 @@ class JanelaMovimentarConta(tk.Toplevel):
         janela_extrato.tree.item(its_selecionados, values=(num_serie,
                                                            self.entry_nm_conta.get(),
                                                            self.entry_valor.get(),
-                                                           self.entry_data.get(),
+                                                           self.entry_data.get_date(),
                                                            self.entry_comentario.get()))
         self.destroy()
 
@@ -211,13 +239,15 @@ def editar_movimentacao(janela_extrato):
     valores = janela_extrato.tree.item(itens_selecionados[0], 'values')
     janela_fazer_movimentação = JanelaMovimentarConta()
 
-    janela_fazer_movimentação.bt_confirmar.config(command=lambda:
-        [apagar_movimentação(valores[0]),
-        fazer_movimentação(janela_fazer_movimentação.entry_nm_conta.get(),
-                        janela_fazer_movimentação.entry_valor.get(),
-                        janela_fazer_movimentação.entry_data.get_date(),
-                        janela_fazer_movimentação.entry_comentario.get()),
-         janela_fazer_movimentação.atualizar_extrato(janela_extrato,valores[0])])
+    janela_fazer_movimentação.bt_confirmar.config(
+        command=lambda:janela_fazer_movimentação.conferir_valores_editar(
+            janela_extrato,valores[0]))
+        # [janela_fazer_movimentação.atualizar_extrato(janela_extrato,valores[0])
+        #     ,apagar_movimentação(valores[0]),
+        # fazer_movimentação(janela_fazer_movimentação.entry_nm_conta.get(),
+        #                 janela_fazer_movimentação.entry_valor.get(),
+        #                 janela_fazer_movimentação.entry_data.get_date(),
+        #                 janela_fazer_movimentação.entry_comentario.get())])
 
     janela_fazer_movimentação.entry_nm_conta.insert(0, valores[1])
     janela_fazer_movimentação.entry_valor.insert(0, valores[2])
@@ -306,7 +336,7 @@ def capturar_erro():
                     return saldo_conta, data
 
 
-def ver_extrato(data_inicial, data_final):
+def ver_extrato(data_inicial, data_final,conta_filtrar=None):
 
     data_inicial = data_inicial.strftime("%Y-%m-%d")
     data_final = data_final.strftime("%Y-%m-%d")
@@ -325,15 +355,34 @@ def ver_extrato(data_inicial, data_final):
     saldo_final = [conta[2] for conta in contas if conta[3] <= data_final]
     saldo_final = sum(saldo_final)
 
-    extratos = [extrato for extrato in contas if extrato[3] >= data_inicial and
-                extrato[3] <= data_final]
+    lista_contas = ver_contas()
+    contas_filtrar = []
+    for conta in lista_contas:
+        contas_filtrar.append(conta)
+
+    if conta_filtrar in contas_filtrar :
+        extratos = [extrato for extrato in contas if extrato[3] >= data_inicial and
+                    extrato[3] <= data_final and extrato[1] == conta_filtrar]
+
+        saldo_inicial = [conta[2] for conta in contas if conta[3] < data_inicial and
+                         conta[1] == conta_filtrar]
+        saldo_inicial = sum(saldo_inicial)
+
+        saldo_final = [conta[2] for conta in contas if conta[3] <= data_final and
+                       conta[1] == conta_filtrar]
+        saldo_final = sum(saldo_final)
+
+    else:
+        extratos = [extrato for extrato in contas if extrato[3] >= data_inicial and
+                    extrato[3] <= data_final]
+
     return extratos, saldo_inicial, saldo_final
 
 def abrir_janela_extrato(janela_anterior):
 
     data_inicial = janela_anterior.entry_data_inicial.get()
     data_final = janela_anterior.entry_data_final.get()
-
+    conta_filtrar = janela_anterior.entry_nm_conta.get()
     try:
         data_inicial = datetime.strptime(data_inicial, "%d/%m/%Y").date()
     except ValueError:
@@ -359,7 +408,7 @@ def abrir_janela_extrato(janela_anterior):
     
     extratos, \
         saldo_inicial, \
-        janela_extrato.saldo_final = ver_extrato(data_inicial, data_final)
+        janela_extrato.saldo_final = ver_extrato(data_inicial, data_final,conta_filtrar)
 
     frame_saldo_inicial = tk.Frame(janela_extrato)
     frame_saldo_inicial.pack(side='top', expand=tk.YES, fill=tk.BOTH)
@@ -738,7 +787,7 @@ def abrir_janela_movimentar_conta():
 def abrir_janela_pesquisar_extrato():
     janela_ver_extrato = tk.Toplevel()
     janela_ver_extrato.title("Ver Extrato")
-    janela_ver_extrato.geometry("400x190+400+50")
+    janela_ver_extrato.geometry("400x300+400+50")
 
     LARGURA_LABEL = 13
 
@@ -787,6 +836,33 @@ def abrir_janela_pesquisar_extrato():
                                              side=tk.RIGHT,
                                              padx=PAD_X,
                                              pady=PAD_Y)
+
+    frame_3 = tk.Frame(janela_ver_extrato)
+    frame_3.pack(side='top',
+                 expand=tk.YES,
+                 fill=tk.BOTH,
+                 padx=PAD_X,
+                 pady=PAD_Y)
+
+    tk.Label(frame_3,
+             text="conta",
+             width=LARGURA_LABEL,
+             font=FONTE_ARIAL_12).pack(expand=tk.YES,
+                                       fill=tk.BOTH,
+                                       side=tk.LEFT)
+
+    lista_contas = ver_contas()
+    contas = []
+    for conta in lista_contas:
+        contas.append(conta)
+
+    janela_ver_extrato.entry_nm_conta = ttk.Combobox(frame_3, values=contas,
+                                  font=FONTE_ARIAL_12,
+                                  width=LARGURA_DATE_ENTRY)
+    janela_ver_extrato.entry_nm_conta.pack(expand=tk.YES, fill=tk.BOTH, side=tk.RIGHT, padx=PAD_X,
+                             pady=PAD_Y)
+
+
 
     frame_5 = tk.Frame(janela_ver_extrato)
     frame_5.pack(side='top',

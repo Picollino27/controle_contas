@@ -1,4 +1,5 @@
 from decimal import  Decimal
+import decimal
 ARQUIVO = "contas.txt"
 
 def arquivo_para_dicionario():
