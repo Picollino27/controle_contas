@@ -146,6 +146,7 @@ class JanelaMovimentarConta(tk.Toplevel):
         nome_conta = nome_conta.replace(";", ":")
 
         valor = self.entry_valor.get()
+        valor = valor.replace(",", ".")
         data = self.entry_data.get()
 
         comentario = self.entry_comentario.get()
@@ -440,7 +441,7 @@ def abrir_janela_extrato(janela_anterior):
     janela_extrato.tree.column('Num_série', width=30)
     janela_extrato.tree.column('Nome', width=150)
     janela_extrato.tree.column('Valor', width=50)
-    janela_extrato.tree.column('Data', width=50)
+    janela_extrato.tree.column('Data', width=60)
 
     for extrato in extratos:
         janela_extrato.tree.column('Comentário', width=150)
@@ -632,157 +633,6 @@ def abrir_janela_movimentar_conta():
     janela_fazer_movimentação = JanelaMovimentarConta()
     janela_fazer_movimentação.focus_set()
     janela_fazer_movimentação.wait_window()
-
-    # janela_fazer_movimentação = tk.Toplevel()
-    # janela_fazer_movimentação.title("Fazer Movimentação")
-    # janela_fazer_movimentação.geometry("400x300+400+50")
-    #
-    # def capturar_infos():
-    #     nome_conta = entry_nm_conta.get()
-    #     nome_conta = nome_conta.replace("\"", "*")
-    #     nome_conta = nome_conta.replace("\'", "*")
-    #     nome_conta = nome_conta.replace(";", ":")
-    #
-    #     valor = entry_valor.get()
-    #     data = entry_data.get()
-    #
-    #     comentario = entry_comentario.get()
-    #     comentario = comentario.replace("\"", "*")
-    #     comentario = comentario.replace("\'", "*")
-    #     comentario = comentario.replace(";", ":")
-    #
-    #     if nome_conta.strip() == "":
-    #         tk.messagebox.showinfo("erro",
-    #                                "nome da conta invalido",
-    #                                parent=janela_fazer_movimentação)
-    #         return
-    #     try:
-    #         valor = Decimal(valor)
-    #     except decimal.InvalidOperation:
-    #         tk.messagebox.showinfo("erro",
-    #                                "valor inválido",
-    #                                parent=janela_fazer_movimentação)
-    #         return
-    #     try:
-    #         data = datetime.strptime(data, "%d/%m/%Y").date()
-    #     except ValueError:
-    #         tk.messagebox.showinfo("erro",
-    #                                "data invalida",
-    #                                parent=janela_fazer_movimentação)
-    #         return
-    #     fazer_movimentação(nome_conta, valor, data, comentario)
-    #     tk.messagebox.showinfo("sucesso",
-    #                            "movimentação efetuada",
-    #                            parent=janela_fazer_movimentação)
-    #     janela_fazer_movimentação.destroy()
-    #
-    # frame_1 = tk.Frame(janela_fazer_movimentação)
-    # frame_1.pack(side='top',
-    #              expand=tk.YES,
-    #              fill=tk.BOTH)
-    #
-    # tk.Label(frame_1,
-    #          text="Nome da Conta",
-    #          width=LARGURA_LABEL,
-    #          font=FONTE_ARIAL_12).pack(expand=tk.YES,
-    #                                    fill=tk.BOTH,
-    #                                    side=tk.LEFT,
-    #                                    padx=PAD_X,
-    #                                    pady=PAD_Y)
-    # lista_contas = ver_contas()
-    # contas = []
-    # for conta in lista_contas:
-    #     contas.append(conta)
-    # entry_nm_conta = ttk.Combobox(frame_1,values=contas, font=FONTE_ARIAL_12, width=LARGURA_LABEL)
-    # entry_nm_conta.pack(expand=tk.YES, fill=tk.BOTH, side=tk.RIGHT,padx=PAD_X,
-    #              pady=PAD_Y)
-    #
-    #
-    # frame_2 = tk.Frame(janela_fazer_movimentação)
-    # frame_2.pack(side='top',
-    #              expand=tk.YES,
-    #              fill=tk.BOTH,)
-    #
-    # tk.Label(frame_2,
-    #          text="Valor",
-    #          width=LARGURA_LABEL,
-    #          font=FONTE_ARIAL_12).pack(expand=tk.YES,
-    #                                    fill=tk.BOTH,
-    #                                    side=tk.LEFT,
-    #                                    padx=PAD_X,
-    #                                    pady=PAD_Y)
-    #
-    # entry_valor = tk.Entry(frame_2, font=FONTE_ARIAL_12, width=LARGURA_LABEL)
-    # entry_valor.pack(expand=tk.YES, fill=tk.BOTH, side=tk.RIGHT,padx=PAD_X,
-    #              pady=PAD_Y)
-    #
-    # frame_3 = tk.Frame(janela_fazer_movimentação)
-    # frame_3.pack(side='top',
-    #              expand=tk.YES,
-    #              fill=tk.BOTH,)
-    #
-    # tk.Label(frame_3, text="Data",
-    #          width=LARGURA_LABEL,
-    #          font=FONTE_ARIAL_12).pack(expand=tk.YES,
-    #                                    fill=tk.BOTH,
-    #                                    side=tk.LEFT,
-    #                                    padx=PAD_X,
-    #                                    pady=PAD_Y)
-    #
-    # entry_data = DateEntry(frame_3, font=FONTE_ARIAL_12, date_pattern='dd/mm/yyyy', width=LARGURA_DATE_ENTRY)
-    # entry_data.pack(expand=tk.YES, fill=tk.BOTH, side=tk.RIGHT,padx=PAD_X,
-    #              pady=PAD_Y)
-    #
-    # frame_4 = tk.Frame(janela_fazer_movimentação)
-    # frame_4.pack(side='top',
-    #              expand=tk.YES,
-    #              fill=tk.BOTH,)
-    #
-    # tk.Label(frame_4,
-    #          text="Comentário",
-    #          width=LARGURA_LABEL,
-    #          font=FONTE_ARIAL_12).pack(expand=tk.YES,
-    #                                    fill=tk.BOTH,
-    #                                    side=tk.LEFT,padx=PAD_X,
-    #              pady=PAD_Y)
-    #
-    # entry_comentario = tk.Entry(frame_4, font=FONTE_ARIAL_12, width=LARGURA_LABEL)
-    # entry_comentario.pack(expand=tk.YES, fill=tk.BOTH, side=tk.RIGHT,padx=PAD_X,
-    #              pady=PAD_Y )
-    #
-    # frame_5 = tk.Frame(janela_fazer_movimentação)
-    # frame_5.pack(side='top',
-    #              expand=tk.YES,
-    #              fill=tk.BOTH,)
-    #
-    # bt_confirmar = tk.Button(frame_5,
-    #                          text="confirmar",
-    #                          width=9,
-    #                          font=FONTE_ARIAL_15,
-    #                          command=capturar_infos)
-    #
-    # bt_confirmar.pack(expand=tk.YES,
-    #                   fill=tk.BOTH,
-    #                   side=tk.LEFT,
-    #                   padx=PAD_X,
-    #                   pady=PAD_Y)
-    #
-    # bt_sair = tk.Button(frame_5,
-    #                     text="sair",
-    #                     width=9,
-    #                     font=FONTE_ARIAL_15,
-    #                     command=janela_fazer_movimentação.destroy)
-    #
-    # bt_sair.pack(expand=tk.YES,
-    #              fill=tk.BOTH,
-    #              side=tk.RIGHT,
-    #              padx=PAD_X,
-    #              pady=PAD_Y, )
-
-    # janela_fazer_movimentação.focus_set()
-    # # janela_fazer_movimentação.grab_set()
-    # janela_fazer_movimentação.wait_window()
-
 
 def abrir_janela_pesquisar_extrato():
     janela_ver_extrato = tk.Toplevel()
